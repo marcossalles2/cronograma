@@ -299,253 +299,254 @@ arquivo_excel = st.sidebar.file_uploader("Faça upload do seu arquivo Excel", ty
 feriados_texto = st.sidebar.text_area("Feriados (formato: DD/MM/YYYY)", "")
 #____________Sidebar
 
-if arquivo_excel is not None:
-    df= ler_arquivo_excel(arquivo_excel)
-    leads_pct, lags_pct, relationship_types_pct, logic_pct, data_inicio, data_termino, duracao_total = calcular_indicadores(df)
+
+df= ler_arquivo_excel(arquivo_excel)
+# Calcular indicadores
+leads_pct, lags_pct, relationship_types_pct, logic_pct, data_inicio, data_termino, duracao_total = calcular_indicadores(df)
 
 
-    col1, col2, col3, col4, col5, col6 = st.columns((1, 2, 1, 1, 1.5, 1.5))
+col1, col2, col3, col4, col5, col6 = st.columns((1, 2, 1, 1, 1.5, 1.5))
 
+with col3:
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
+         flex; flex-direction: column; justify-content: center;
+         background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
+                <b>Latências -</b>
+            </h2>
+            <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
+            <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
+                <b>Should be: = 0%</b>
+            </h4>
+        </div>
+        """.format(leads_pct),
+        unsafe_allow_html=True
+    )
+with col4:
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
+            flex; flex-direction: column; justify-content: center;
+            background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
+                <b>Latências +</b>
+            </h2>
+            <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
+            <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
+                <b>Should be < 5%</b>
+            </h4>
+        </div>
+            """.format(lags_pct),
+        unsafe_allow_html=True
+    )
+with col5:
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
+            flex; flex-direction: column; justify-content: center;
+            background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
+                <b>Relacionamento TI</b>
+            </h2>
+            <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
+            <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
+                <b>Should be > 95%</b>
+            </h4>
+        </div>  
+        """.format(relationship_types_pct),
+        unsafe_allow_html=True
+    )
+with col6:
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
+            flex; flex-direction: column; justify-content: center;
+            background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
+                <b>Sem Relacionamento</b>
+            </h2>
+            <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
+            <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
+                <b>Should be < 5%</b>
+            </h4>
+        </div>
+            """.format(lags_pct),
+        unsafe_allow_html=True
+    )
+with col2:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    Valor_Agregado = df["Custo"].sum()
+    Valor_Agregadof = locale.currency(Valor_Agregado, grouping=True)
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 5px; border-radius: 10px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center;
+            background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -7px 0;">
+                <b>Valor Agregado</b>
+            <h3 style="color: #0068C9;">{}</h3>
+        </div>
+        """.format(Valor_Agregadof),
+        unsafe_allow_html=True
+    )
+with col1:
+    st.markdown(
+        """
+        <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: left; display:
+         flex; flex-direction: column; justify-content: center;
+         background-color:#F0F0F0;">
+            <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
+            </h2>
+            <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
+                Início BL: {Data_Inicio}
+            </h3>
+            <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
+                Término BL: {Data_Termino}
+            </h3>
+            <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
+                Duração: {Duracao_Total} dias
+            </h3>
+        </div>
+        """.format(Data_Inicio=data_inicio, Data_Termino=data_termino, Duracao_Total=duracao_total),
+        unsafe_allow_html=True
+    )
+
+st.subheader(":blue[Curva S:]")
+col1, col2 = st.columns((2.5,1))  # Dividir a tela em duas colunas
+
+with col2:
+    # Escolher o agrupamento
+    agrupamento_opcao = st.selectbox("Agrupamento:", ["Mês", "Semana"])
+
+    # Definir os valores de S30, S50 e S70
+    col3, col4, col5 = st.columns((1, 1, 1))
     with col3:
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
-             flex; flex-direction: column; justify-content: center;
-             background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
-                    <b>Latências -</b>
-                </h2>
-                <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
-                <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
-                    <b>Should be: = 0%</b>
-                </h4>
-            </div>
-            """.format(leads_pct),
-            unsafe_allow_html=True
-        )
+        S30 = st.selectbox("Valor de S30", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
     with col4:
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
-                flex; flex-direction: column; justify-content: center;
-                background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
-                    <b>Latências +</b>
-                </h2>
-                <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
-                <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
-                    <b>Should be < 5%</b>
-                </h4>
-            </div>
-                """.format(lags_pct),
-            unsafe_allow_html=True
-        )
+        S50 = st.selectbox("Valor de S50", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
     with col5:
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
-                flex; flex-direction: column; justify-content: center;
-                background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
-                    <b>Relacionamento TI</b>
-                </h2>
-                <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
-                <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
-                    <b>Should be > 95%</b>
-                </h4>
-            </div>  
-            """.format(relationship_types_pct),
-            unsafe_allow_html=True
-        )
-    with col6:
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: center; display:
-                flex; flex-direction: column; justify-content: center;
-                background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
-                    <b>Sem Relacionamento</b>
-                </h2>
-                <h3 style="color: #0068C9; margin: -5px 0;">{:.2f}%</h3>
-                <h4 style="color: #0068C9; font-size: 12px; margin: -10px 0;">
-                    <b>Should be < 5%</b>
-                </h4>
-            </div>
-                """.format(lags_pct),
-            unsafe_allow_html=True
-        )
-    with col2:
-        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-        Valor_Agregado = df["Custo"].sum()
-        Valor_Agregadof = locale.currency(Valor_Agregado, grouping=True)
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 5px; border-radius: 10px; text-align: center;
-                display: flex; flex-direction: column; justify-content: center;
-                background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -7px 0;">
-                    <b>Valor Agregado</b>
-                <h3 style="color: #0068C9;">{}</h3>
-            </div>
-            """.format(Valor_Agregadof),
-            unsafe_allow_html=True
-        )
-    with col1:
-        st.markdown(
-            """
-            <div style="border: 1px inset #468189; padding: 2px; border-radius: 10px; text-align: left; display:
-             flex; flex-direction: column; justify-content: center;
-             background-color:#F0F0F0;">
-                <h2 style="color: #0068C9;font-size: 20px; margin: -10px 0;">
-                </h2>
-                <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
-                    Início BL: {Data_Inicio}
-                </h3>
-                <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
-                    Término BL: {Data_Termino}
-                </h3>
-                <h3 style="color: #0068C9; margin: -6px 0;font-size: 16px;">
-                    Duração: {Duracao_Total} dias
-                </h3>
-            </div>
-            """.format(Data_Inicio=data_inicio, Data_Termino=data_termino, Duracao_Total=duracao_total),
-            unsafe_allow_html=True
-        )
+        S70 = st.selectbox("Valor de S70", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
 
-    st.subheader(":blue[Curva S:]")
-    col1, col2 = st.columns((2.5,1))  # Dividir a tela em duas colunas
-
-    with col2:
-        # Escolher o agrupamento
-        agrupamento_opcao = st.selectbox("Agrupamento:", ["Mês", "Semana"])
-
-        # Definir os valores de S30, S50 e S70
-        col3, col4, col5 = st.columns((1, 1, 1))
-        with col3:
-            S30 = st.selectbox("Valor de S30", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
-        with col4:
-            S50 = st.selectbox("Valor de S50", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
-        with col5:
-            S70 = st.selectbox("Valor de S70", options=[1.0, 1.5, 2.0, 2.5, 3.0], index=3)
-
-    # Processar os dados e criar a curva S
-    CurvaS_agrupado = processar_dados(arquivo_excel, feriados_texto, agrupamento_opcao, S30, S50, S70)
+# Processar os dados e criar a curva S
+CurvaS_agrupado = processar_dados(arquivo_excel, feriados_texto, agrupamento_opcao, S30, S50, S70)
 
 
 
-    with col1:
-        # Plotar o gráfico da curva S agrupado por mês
-        if CurvaS_agrupado is not None:
-            plt.figure(figsize=(12, 6))
-            plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['% Acum.'], marker='o', markerfacecolor="#0068C9", label='% Acum.')
-            plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva30'], linestyle=":", color='lightpink', label='S30')
-            plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva50'], linestyle=":", color='lightgreen', label='S50')
-            plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva70'], linestyle=":", color='Lightgray', label='S70')
-            plt.xlabel('Data')
-            plt.ylabel('% Acum.')
-            # Ajustar a densidade dos ticks dependendo do agrupamento selecionado
-            if agrupamento_opcao == 'Mês':
-                plt.xticks(CurvaS_agrupado.index[::1], rotation=0)
-            elif agrupamento_opcao == 'Semana':
-                plt.xticks(CurvaS_agrupado.index[::4], rotation=0)
-            plt.legend(loc='upper left')
-            plt.grid(False)
-            plt.box(None)
-            # Adicionando rótulos de dados nos pontos
-            for i in range(len(CurvaS_agrupado.index)):
-                plt.text(CurvaS_agrupado.index[i], CurvaS_agrupado['% Acum.'][i] + 4,
-                         f"{CurvaS_agrupado['% Acum.'][i]:.1f}%", ha="center", va="bottom", color="#0068C9",
-                         weight="bold")
-            st.pyplot(plt)
-        else:
-            st.write("Por favor, carregue um arquivo Excel para processar os dados.")
+with col1:
+    # Plotar o gráfico da curva S agrupado por mês
+    if CurvaS_agrupado is not None:
+        plt.figure(figsize=(12, 6))
+        plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['% Acum.'], marker='o', markerfacecolor="#0068C9", label='% Acum.')
+        plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva30'], linestyle=":", color='lightpink', label='S30')
+        plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva50'], linestyle=":", color='lightgreen', label='S50')
+        plt.plot(CurvaS_agrupado.index, CurvaS_agrupado['Curva70'], linestyle=":", color='Lightgray', label='S70')
+        plt.xlabel('Data')
+        plt.ylabel('% Acum.')
+        # Ajustar a densidade dos ticks dependendo do agrupamento selecionado
+        if agrupamento_opcao == 'Mês':
+            plt.xticks(CurvaS_agrupado.index[::1], rotation=0)
+        elif agrupamento_opcao == 'Semana':
+            plt.xticks(CurvaS_agrupado.index[::4], rotation=0)
+        plt.legend(loc='upper left')
+        plt.grid(False)
+        plt.box(None)
+        # Adicionando rótulos de dados nos pontos
+        for i in range(len(CurvaS_agrupado.index)):
+            plt.text(CurvaS_agrupado.index[i], CurvaS_agrupado['% Acum.'][i] + 4,
+                     f"{CurvaS_agrupado['% Acum.'][i]:.1f}%", ha="center", va="bottom", color="#0068C9",
+                     weight="bold")
+        st.pyplot(plt)
+    else:
+        st.write("Por favor, carregue um arquivo Excel para processar os dados.")
 
-    with col2:
-        # Formatar a coluna "% Acum." para exibir apenas duas casas decimais
-        CurvaS_agrupado['% Acum.'] = CurvaS_agrupado['% Acum.'].apply(lambda x: f"{x:.1f}%")
-        CurvaS_agrupado['Custo Total'] = CurvaS_agrupado['Custo Total'].apply(lambda x: f"R$ {x:,.0f}".replace(',', 'X').replace('.', ',').replace('X', '.'))
-        CurvaS_agrupado.rename(columns={"Custo Total": "Custo"}, inplace=True)
-        CurvaS_agrupado_selected = CurvaS_agrupado[["% ", "% Acum.","Custo"]]
-        # Resetar o índice para que ele seja tratado como uma coluna normal
-        CurvaS_agrupado_selected = CurvaS_agrupado_selected.reset_index()
-        # Verificar o tipo de agrupamento e ajustar a exibição da tabela
-        if agrupamento_opcao == "Semana":
-            html_table_curva_s = CurvaS_agrupado_selected.to_html(index=False, classes=["dataframe"], justify="center", escape=False)
-            st.write(css_style + '<div class="scrollable-table">' + html_table_curva_s + '</div>', unsafe_allow_html=True)
-        else:
-            html_table_curva_s = CurvaS_agrupado_selected.to_html(index=False,classes=["dataframe"], justify="center", escape=False)
-            st.write(css_style + html_table_curva_s, unsafe_allow_html=True)
+with col2:
+    # Formatar a coluna "% Acum." para exibir apenas duas casas decimais
+    CurvaS_agrupado['% Acum.'] = CurvaS_agrupado['% Acum.'].apply(lambda x: f"{x:.1f}%")
+    CurvaS_agrupado['Custo Total'] = CurvaS_agrupado['Custo Total'].apply(lambda x: f"R$ {x:,.0f}".replace(',', 'X').replace('.', ',').replace('X', '.'))
+    CurvaS_agrupado.rename(columns={"Custo Total": "Custo"}, inplace=True)
+    CurvaS_agrupado_selected = CurvaS_agrupado[["% ", "% Acum.","Custo"]]
+    # Resetar o índice para que ele seja tratado como uma coluna normal
+    CurvaS_agrupado_selected = CurvaS_agrupado_selected.reset_index()
+    # Verificar o tipo de agrupamento e ajustar a exibição da tabela
+    if agrupamento_opcao == "Semana":
+        html_table_curva_s = CurvaS_agrupado_selected.to_html(index=False, classes=["dataframe"], justify="center", escape=False)
+        st.write(css_style + '<div class="scrollable-table">' + html_table_curva_s + '</div>', unsafe_allow_html=True)
+    else:
+        html_table_curva_s = CurvaS_agrupado_selected.to_html(index=False,classes=["dataframe"], justify="center", escape=False)
+        st.write(css_style + html_table_curva_s, unsafe_allow_html=True)
 
-    # Mostrar as tarefas críticas
-    tabela_critica, fig_gantt = caminho_critico_com_gantt(df)
+# Mostrar as tarefas críticas
+tabela_critica, fig_gantt = caminho_critico_com_gantt(df)
 
-    valor_x=5
+valor_x=5
 
-    # Converter a coluna 'Folga' para o tipo numérico
-    df['Folga'] = pd.to_numeric(df['Folga'], errors='coerce')
+# Converter a coluna 'Folga' para o tipo numérico
+df['Folga'] = pd.to_numeric(df['Folga'], errors='coerce')
 
-    # Filtrar as tarefas com folga curta
+# Filtrar as tarefas com folga curta
+tarefas_folga_curta = df[(df['Folga'] > 0) & (df['Folga'] <= valor_x)]
+
+# Convertendo as colunas de data para datetime, se não forem
+tarefas_folga_curta['Início BL'] = pd.to_datetime(tarefas_folga_curta['Início BL'],
+                                                  format='%d.%m.%y').dt.date
+tarefas_folga_curta['Término BL'] = pd.to_datetime(tarefas_folga_curta['Término BL'],
+                                                   format='%d.%m.%y').dt.date
+
+# Selecionar colunas específicas para exibir
+colunas_desejadas = ['Nome da tarefa', 'Início BL', 'Término BL',
+                     'Folga']
+tarefas_folga_curta = tarefas_folga_curta[colunas_desejadas]
+
+# Dividir a tela em duas colunas
+col1, col2 = st.columns((1.5, 1))
+
+
+# Exibir as tarefas críticas em uma coluna
+with col1:
+    st.subheader(":blue[Tarefas Críticas:]")
+    # Converter a tabela em HTML e aplicar estilos CSS
+    html_table_critica = tabela_critica.to_html(index=False, classes=["dataframe"], justify="center")
+    st.write(css_style + html_table_critica, unsafe_allow_html=True)
+
+# Exibir a interface do usuário e as tarefas com folga curta em outra coluna
+with col2:
+    st.subheader(":blue[Tarefas com Folga Curta:]")
+    # Interface do usuário para selecionar o valor de X (margem de atraso permitida)
+    valor_x = st.selectbox("Selecione o valor para folga curta:", options=[1,2,3,4,5,6,7,8,9,10], index=5)
+    # Atualizar a filtragem das tarefas com folga curta com o valor de X selecionado
     tarefas_folga_curta = df[(df['Folga'] > 0) & (df['Folga'] <= valor_x)]
 
     # Convertendo as colunas de data para datetime, se não forem
-    tarefas_folga_curta['Início BL'] = pd.to_datetime(tarefas_folga_curta['Início BL'],
-                                                      format='%d.%m.%y').dt.date
-    tarefas_folga_curta['Término BL'] = pd.to_datetime(tarefas_folga_curta['Término BL'],
-                                                       format='%d.%m.%y').dt.date
+    tarefas_folga_curta['Início BL'] = pd.to_datetime(tarefas_folga_curta['Início BL'], format='%d.%m.%y').dt.date
+    tarefas_folga_curta['Término BL'] = pd.to_datetime(tarefas_folga_curta['Término BL'], format='%d.%m.%y').dt.date
 
     # Selecionar colunas específicas para exibir
-    colunas_desejadas = ['Nome da tarefa', 'Início BL', 'Término BL',
-                         'Folga']
+    colunas_desejadas = ['Nome da tarefa', 'Início BL', 'Término BL', 'Folga']
     tarefas_folga_curta = tarefas_folga_curta[colunas_desejadas]
 
-    # Dividir a tela em duas colunas
-    col1, col2 = st.columns((1.5, 1))
+    # Converter a tabela em HTML e aplicar estilos CSS
+    html_table_folga_curta = tarefas_folga_curta.to_html(index=False, classes=["dataframe"], justify="center")
+    st.write(css_style + html_table_folga_curta, unsafe_allow_html=True)
 
+st.write("")
+st.subheader(":blue[Gráfico de Gantt - Tarefas Críticas:]")
+st.plotly_chart(fig_gantt)
 
-    # Exibir as tarefas críticas em uma coluna
-    with col1:
-        st.subheader(":blue[Tarefas Críticas:]")
-        # Converter a tabela em HTML e aplicar estilos CSS
-        html_table_critica = tabela_critica.to_html(index=False, classes=["dataframe"], justify="center")
-        st.write(css_style + html_table_critica, unsafe_allow_html=True)
+# Selecionar valores para alta e baixa duração lado a lado
+col1, col2 = st.columns(2)
 
-    # Exibir a interface do usuário e as tarefas com folga curta em outra coluna
-    with col2:
-        st.subheader(":blue[Tarefas com Folga Curta:]")
-        # Interface do usuário para selecionar o valor de X (margem de atraso permitida)
-        valor_x = st.selectbox("Selecione o valor para folga curta:", options=[1,2,3,4,5,6,7,8,9,10], index=5)
-        # Atualizar a filtragem das tarefas com folga curta com o valor de X selecionado
-        tarefas_folga_curta = df[(df['Folga'] > 0) & (df['Folga'] <= valor_x)]
-
-        # Convertendo as colunas de data para datetime, se não forem
-        tarefas_folga_curta['Início BL'] = pd.to_datetime(tarefas_folga_curta['Início BL'], format='%d.%m.%y').dt.date
-        tarefas_folga_curta['Término BL'] = pd.to_datetime(tarefas_folga_curta['Término BL'], format='%d.%m.%y').dt.date
-
-        # Selecionar colunas específicas para exibir
-        colunas_desejadas = ['Nome da tarefa', 'Início BL', 'Término BL', 'Folga']
-        tarefas_folga_curta = tarefas_folga_curta[colunas_desejadas]
-
-        # Converter a tabela em HTML e aplicar estilos CSS
-        html_table_folga_curta = tarefas_folga_curta.to_html(index=False, classes=["dataframe"], justify="center")
-        st.write(css_style + html_table_folga_curta, unsafe_allow_html=True)
-
-    st.write("")
-    st.subheader(":blue[Gráfico de Gantt - Tarefas Críticas:]")
-    st.plotly_chart(fig_gantt)
-
-    # Selecionar valores para alta e baixa duração lado a lado
-    col1, col2 = st.columns(2)
-
-    with col1:
-        valor_alta_duracao = st.number_input("Digite o valor para alta duração:", value=20, min_value=5, max_value=50,
-                                             step=1, format="%d", key="input_inteiro_alta"
-                                             )
-        calcular_high_duration(df, valor_alta_duracao)
-    with col2:
-        valor_baixa_duracao = st.number_input("Digite o valor para baixa duração:", value=5, min_value=0, max_value=10,
-                                             step=1, format="%d", key="input_inteiro_baixa"
-                                             )
-        calcular_low_duration(df, valor_baixa_duracao)
+with col1:
+    valor_alta_duracao = st.number_input("Digite o valor para alta duração:", value=20, min_value=5, max_value=50,
+                                         step=1, format="%d", key="input_inteiro_alta"
+                                         )
+    calcular_high_duration(df, valor_alta_duracao)
+with col2:
+    valor_baixa_duracao = st.number_input("Digite o valor para baixa duração:", value=5, min_value=0, max_value=10,
+                                         step=1, format="%d", key="input_inteiro_baixa"
+                                         )
+    calcular_low_duration(df, valor_baixa_duracao)
 
 
 
