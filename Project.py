@@ -376,7 +376,7 @@ with col6:
         unsafe_allow_html=True
     )
 with col2:
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    locale.setlocale(locale.LC_ALL, '')
     Valor_Agregado = df["Custo"].sum()
     Valor_Agregadof = locale.currency(Valor_Agregado, grouping=True)
     st.markdown(
@@ -547,6 +547,7 @@ with col2:
                                          step=1, format="%d", key="input_inteiro_baixa"
                                          )
     calcular_low_duration(df, valor_baixa_duracao)
+
 
 
 
