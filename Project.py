@@ -268,6 +268,8 @@ def calcular_low_duration(df, valor_baixa_duracao):
     else:
         st.write("Nenhuma tarefa encontrada com duração baixa.")
 
+def format_currency(amount):
+    return f'R${amount:,.2f}'.replace('.', ',').replace(',', '.', 2)
 
 
 # Interface do usuário
@@ -376,9 +378,9 @@ with col6:
         unsafe_allow_html=True
     )
 with col2:
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
     Valor_Agregado = df["Custo"].sum()
-    Valor_Agregadof = locale.currency(Valor_Agregado, grouping=True)
+    Valor_Agregadof = format_currency(Valor_Agregado)
     st.markdown(
         """
         <div style="border: 1px inset #468189; padding: 5px; border-radius: 10px; text-align: center;
