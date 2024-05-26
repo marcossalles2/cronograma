@@ -63,7 +63,7 @@ def criar_curva_s(dataframe, agrupamento, S30, S50, S70):
 
     # Formatar os valores monetários
     curva_s_agrupado['Custo Total '] = curva_s_agrupado['Custo Total'].apply(
-        lambda x: locale.currency(x, grouping=True))
+        lambda x: '{:,.2f}'.format(x).replace(',', 'X').replace('.', ',').replace('X', '.'))
     # Formatar as colunas de % e % Acum.
     curva_s_agrupado['% '] = curva_s_agrupado['%'].apply(lambda x: f"{x:.1f}%")
     curva_s_agrupado['% Acum. '] = curva_s_agrupado['% Acum.'].apply(lambda x: f"{x:.1f}%")
