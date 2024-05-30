@@ -561,8 +561,35 @@ if arquivo_excel is not None:
                                              )
         calcular_low_duration(df, valor_baixa_duracao)
 else:
-    st.write("Aguardando arquivo")
+    # Mensagem inicial para o usuário
+    st.write("AGUARDANDO ARQUIVO:")
 
+    # Orientações para o usuário
+    st.write("""
+    ### Por favor, verifique se o seu arquivo contém as seguintes colunas:
+
+    - **Início Agendado** 
+    - **Término Agendado** 
+    - **Início da Linha de Base** 
+    - **Término da linha de base** 
+    - **Duração da Linha de Base** 
+    - **Margem de atraso permitida** 
+    - **Predecessoras**
+    - **Sucessoras**
+    - **Resumo** 
+    - **Custo** 
+    - **Nome da tarefa** 
+    - **Crítica** 
+    - **Duração** 
+    - **Quant. Prev.** 
+    - **Produtividade** 
+
+    ### Informação Adicional:
+
+    A Curva S é elaborada considerando o calendário sem feriados. Para que o cálculo seja realizado corretamente, é necessário informar as datas de feriado do seu cronograma.
+
+    Verifique se todas essas colunas estão presentes e corretamente formatadas em seu arquivo XLSX.
+    """)
 
 
 
